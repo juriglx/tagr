@@ -11,27 +11,29 @@ class Tagr
     @out = out
   end
   
-  def run(arguments)
-    cmd = arguments[0]
+  def run(args)
+    cmd = args.shift
     case
     when cmd == "add"
-      add(arguments[1], arguments[2])
+      add(*args)
     when cmd == "list"
       list()
     when cmd == "show"
-      show(arguments[1])
+      show(*args)
     end
   end
   
-  def add(tag, file)
+  def add(file, *tag_array)
     return unless File.exist?(File.join(@working_dir, file))
     tags = read_tags()
-    files = tags[tag]
-    if(files.nil?)
-      tags[tag] = [file]
-    else
-      tags[tag].push(file).uniq!
-    end
+    tag_array.each { |tag| 
+      files = tags[tag]
+      if(files.nil?)
+        tags[tag] = [file]
+      else
+        tags[tag].push(file).uniq!
+      end
+    }
     write_tags(tags)
   end
   
@@ -41,13 +43,21 @@ class Tagr
     @out.write(tags.keys.sort.join(" ") + "\n")
   end
   
-  def show(tag)
+  def show(*tag_array)
     tags = read_tags()
-    return if (tags.empty? or tags[tag].nil?)
-    @out.write(tags[tag].sort.join(" ") + "\n") 
+    file_arrays = []
+    tag_array.each { |tag| 
+      if (tags.empty? or tags[tag].nil?)
+        file_arrays << [] 
+      else
+        file_arrays << tags[tag]
+      end
+    }
+    fs = file_arrays.inject {|files, file_array| files & file_array }
+    @out.write(fs.sort.join(" ") + "\n") 
   end
   
-  def exist?(tag, file)
+  def exist?(file, tag)
     files = read_tags()[tag]
     return false if files.nil?
     return files.include?(file)

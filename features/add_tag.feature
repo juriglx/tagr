@@ -6,13 +6,13 @@ Feature: Add Tags
     Scenario: Add Tag to not existing tagfile
         Given I have a file called "book.pdf" in the testpath
         And I have no .tags file in the testpath
-        When I run tagr.rb "add sweetness book.pdf" in the testpath
+        When I run tagr.rb "add book.pdf sweetness" in the testpath
         And I should have the tag "sweetness" in my .tags attached to "book.pdf"
         
     Scenario: Add a tag to a file with an existing tag attached to this file 
         Given I have a file called "book.pdf" in the testpath
         And I have the tag "sweetness" in my .tags file attached to "book.pdf"
-        When I run tagr.rb "add awesome book.pdf" in the testpath
+        When I run tagr.rb "add book.pdf awesome" in the testpath
         Then I should have the tag "sweetness" in my .tags attached to "book.pdf"
         And I should have the tag "awesome" in my .tags attached to "book.pdf"
         
@@ -20,6 +20,6 @@ Feature: Add Tags
         Given I have a file called "book.pdf" in the testpath
         And I have a file called "book.txt" in the testpath
         And I have the tag "sweetness" in my .tags file attached to "book.pdf"
-        When I run tagr.rb "add sweetness book.txt" in the testpath
+        When I run tagr.rb "add book.txt sweetness" in the testpath
         Then I should have the tag "sweetness" in my .tags attached to "book.txt"
         And I should have the tag "sweetness" in my .tags attached to "book.pdf"        

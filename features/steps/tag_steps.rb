@@ -21,7 +21,7 @@ Given /^I have the tag "([^\"]*)" in my \.tags file attached to "([^\"]*)"$/ do 
   Given "I have a .tags file in the testpath"
   @cliout = StringIO.new
   @tagr = Tagr.new(TESTPATH, @cliout)
-  @tagr.add(tag, file)
+  @tagr.add(file, tag)
 end
 
 When /^I run tagr\.rb "([^\"]*)" in the testpath$/ do |arg|
@@ -49,7 +49,7 @@ Then /^I should have the tag "([^\"]*)" in my \.tags attached to "([^\"]*)"$/ do
   Then "I should have a .tags file in the testpath"
   Then "I should have the tag \"" + tag + "\" in my .tags file"
   Then "I should have the relative path of \"" + file + "\" in my .tags file"
-  @tagr.exist?(tag, file).should == true
+  @tagr.exist?(file, tag).should == true
 end
 
 Then /^I should see "([^\"]*)"$/ do |tag|

@@ -14,41 +14,48 @@ describe "the tagr" do
   end
   
   it "should add tags to the .tags file" do
-    @tagr.run(["add", "mytag", "book.pdf"])
-    @tagr.exist?("mytag", "book.pdf").should == true
+    @tagr.run(["add", "book.pdf", "mytag"])
+    @tagr.exist?("book.pdf", "mytag").should == true
   end
   
   it "should list all available tags" do
-    @tagr.run(["add", "mytag", "book.pdf"])
+    @tagr.run(["add", "book.pdf", "mytag"])
     @tagr.run(["list"])
     @cliout.string.should include("mytag")
   end
   
   it "should show all files or directories tagged with a tag" do 
-    @tagr.run(["add", "mytag", "book.pdf"])
+    @tagr.run(["add", "book.pdf", "mytag"])
     @tagr.run(["show", "mytag"])
     @cliout.string.should include("book.pdf")
   end
   
   it "should not add tag file combinations twice" do
-    @tagr.run(["add", "mytag", "book.pdf"])
-    @tagr.run(["add", "mytag", "book.pdf"])
+    @tagr.run(["add", "book.pdf", "mytag"])
+    @tagr.run(["add", "book.pdf", "mytag"])
     @tagr.run(["show", "mytag"])
     @cliout.string.split(" ").length.should == @cliout.string.split(" ").uniq.length
   end
   
   it "should not add the tag and file if the tagged file or directory does not exist" do
-    @tagr.run(["add", "mytag", "random.file"])
+    @tagr.run(["add", "random.file", "mytag"])
     @tagr.run(["show", "mytag"])
     @cliout.string.should_not include("random.file")
   end
   
   it "should accept multiple tags for a file or directory on add" do
-    pending
+    @tagr.run(["add", "book.pdf", "tag_one", "tag_two"])
+    @tagr.run(["list"])
+    @cliout.string.should include("tag_one")
+    @cliout.string.should include("tag_two")
   end
   
   it "should accept multiple tags for a file or directory on show" do
-    pending
+    @tagr.run(["add", "book.pdf", "tag_one", "tag_two"])
+    @tagr.run(["add", "book.txt", "tag_one"])
+    @tagr.run(["show", "tag_one", "tag_two"])
+    @cliout.string.should include("book.pdf")
+    @cliout.string.should_not include("book.txt")
   end
 
   it "should append on directories a trailing slash" do
@@ -86,7 +93,7 @@ describe "the tagfile" do
   it "should have a newline at the end" do
     @tagr = Tagr.new(TESTPATH, StringIO.new)
     @tagr.delete_all
-    @tagr.run(["add", "mytag", "book.pdf"])
+    @tagr.run(["add", "book.pdf", "mytag"])
     File.open(File.join(TESTPATH, Tagr::TAGFILE_NAME)).read.match(/\n$/).should_not == nil
   end
 
