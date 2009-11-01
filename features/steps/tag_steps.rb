@@ -1,17 +1,30 @@
 TESTPATH = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "testpath"))
 
 require 'json'
+require File.join(File.dirname(__FILE__), "..", "..", "lib", "tag.rb")
 
 Given /^I have a file called "([^\"]*)" in the testpath$/ do |file|
   File.new(File.join(TESTPATH, file), 'w')
 end
 
+Given /^I have no \.tags file in the testpath$/ do
+  File.delete(File.join(TESTPATH, ".tags"))
+end
+
+
 Given /^I have a \.tags file in the testpath$/ do
   @f = File.new(File.join(TESTPATH, ".tags"), 'w')
 end
 
-Given /^I have the tag "([^\"]*)" in my \.tags file$/ do |arg1|
-  pending
+Given /^I have the tag "([^\"]*)" in my \.tags file$/ do |tag|
+  Given "I have a .tags file in the testpath"
+  Given "I have the tag \"" + tag + "\" in my .tags file attached to \"my.file\""
+end
+
+Given /^I have the tag "([^\"]*)" in my \.tags file attached to "([^\"]*)"$/ do |tag, file|
+  Given "I have a .tags file in the testpath"
+  tagger = Tag.new(TESTPATH)
+  tagger.add(tag, file)
 end
 
 When /^I run "([^\"]*)" "([^\"]*)" "([^\"]*)" "([^\"]*)" in the testpath$/ do |cmd, method, arg1, arg2|
@@ -19,8 +32,13 @@ When /^I run "([^\"]*)" "([^\"]*)" "([^\"]*)" "([^\"]*)" in the testpath$/ do |c
   @run = system(File.join(TESTPATH, "..", "lib", cmd), method, arg1, arg2)
 end
 
-When /^I run "([^\"]*)" "([^\"]*)" in the testpath$/ do |arg1, arg2|
+When /^I run "([^\"]*)" "([^\"]*)" in the testpath$/ do |cmd, method|
   pending
+end
+
+Then /^I should have the tag "([^\"]*)" in my \.tags attached to "([^\"]*)"$/ do |tag, file|
+  tagger = Tag.new(TESTPATH)
+  tagger.exist?(tag, file).should == true
 end
 
 Then /^the tag script should be run$/ do
