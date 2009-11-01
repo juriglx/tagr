@@ -78,7 +78,7 @@ class Tagr
   
   def write_tags(tags)
     f = File.open(@tagfile, 'w')
-    f.write(JSON.generate(tags))
+    f.write(JSON.generate(tags) + "\n")
     f.close unless f.nil?
   end
 end
