@@ -11,7 +11,6 @@ Given /^I have no \.tags file in the testpath$/ do
   File.delete(File.join(TESTPATH, ".tags"))
 end
 
-
 Given /^I have a \.tags file in the testpath$/ do
   @f = File.new(File.join(TESTPATH, ".tags"), 'w')
 end
@@ -36,11 +35,6 @@ When /^I run "([^\"]*)" "([^\"]*)" in the testpath$/ do |cmd, method|
   pending
 end
 
-Then /^I should have the tag "([^\"]*)" in my \.tags attached to "([^\"]*)"$/ do |tag, file|
-  tagger = Tag.new(TESTPATH)
-  tagger.exist?(tag, file).should == true
-end
-
 Then /^the tag script should be run$/ do
   @run.should == true
 end
@@ -58,6 +52,14 @@ end
 Then /^I should have the relative path of "([^\"]*)" in my \.tags file$/ do |file|
   tf = File.new(File.join(TESTPATH, ".tags"))
   tf.read.should include(file)
+end
+
+Then /^I should have the tag "([^\"]*)" in my \.tags attached to "([^\"]*)"$/ do |tag, file|
+  Then "I should have a .tags file in the testpath"
+  Then "I should have the tag \"" + tag + "\" in my .tags file"
+  Then "I should have the relative path of \"" + file + "\" in my .tags file"
+  tagger = Tag.new(TESTPATH)
+  tagger.exist?(tag, file).should == true
 end
 
 Then /^I should see "([^\"]*)"$/ do |arg1|

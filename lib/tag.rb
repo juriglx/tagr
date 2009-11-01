@@ -18,12 +18,19 @@ class Tag
   
   def add(tag, file)
     tags = read_tags()
-    tags[tag] = file
+    files = tags[tag]
+    if(files.nil?)
+      tags[tag] = [file]
+    else
+      tags[tag].push(file)
+    end
     write_tags(tags)
   end
   
-  def exist?(tag, file) 
-    return read_tags()[tag] == file
+  def exist?(tag, file)
+    files = read_tags()[tag]
+    return false if files.nil?
+    return files.include?(file)
   end
   
   private
