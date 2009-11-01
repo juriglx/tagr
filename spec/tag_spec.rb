@@ -65,10 +65,6 @@ describe "the tagr" do
     @cliout.string.should include("tag_one")
     @cliout.string.should include("2")
   end
-
-  it "should append on directories a trailing slash" do
-    pending
-  end
   
   it "should only accept files or directories in subdirectories" do
     pending
@@ -95,7 +91,10 @@ describe "the command-line interface" do
   end
   
   it "should print a help if no cmd match" do
-    pending
+    @cliout = StringIO.new
+    @tagr = Tagr.new(TESTPATH, @cliout)
+    @tagr.run(["hossa"])
+    @cliout.string.should include("help")
   end
 
 end

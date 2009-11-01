@@ -13,14 +13,24 @@ class Tagr
   
   def run(args)
     cmd = args.shift
+    help = true
     case
     when cmd == "add"
-      add(*args)
+      if args.length >= 2
+        help = false
+        add(*args)
+      end
     when cmd == "list"
+      help = false
       list()
     when cmd == "show"
-      show(*args)
+      if args.length >= 1
+        help = false
+        show(*args)
+      end
     end
+    
+    usage() if help
   end
   
   def add(file, *tag_array)
@@ -55,7 +65,7 @@ class Tagr
       end
     }
     fs = file_arrays.inject {|files, file_array| files & file_array }
-    @out.write(fs.sort.join(" ") + "\n") 
+    @out.write(fs.sort.join("\n") + "\n") 
   end
   
   def exist?(file, tag)
@@ -91,6 +101,13 @@ class Tagr
     f = File.open(@tagfile, 'w')
     f.write(JSON.generate(tags) + "\n")
     f.close unless f.nil?
+  end
+  
+  def usage
+    @out.puts "tagr - help"
+    @out.puts "add <file> [<tag>+]"
+    @out.puts "show [<tag>+]"
+    @out.puts "list"
   end
 end
 
