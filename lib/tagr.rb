@@ -40,7 +40,8 @@ class Tagr
   def list()
     tags = read_tags()
     return if tags.empty?
-    @out.write(tags.keys.sort.join(" ") + "\n")
+    ts = tags.sort.inject([]) { | m, (k, v) | m << k + " " + v.length.to_s}
+    @out.write(ts.join("\n") + "\n")
   end
   
   def show(*tag_array)

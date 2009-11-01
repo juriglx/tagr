@@ -57,8 +57,20 @@ describe "the tagr" do
     @cliout.string.should include("book.pdf")
     @cliout.string.should_not include("book.txt")
   end
+  
+  it "should show the number of files tagged with a tag" do
+    @tagr.run(["add", "book.pdf", "tag_one"])
+    @tagr.run(["add", "book.txt", "tag_one"])
+    @tagr.run(["list"])
+    @cliout.string.should include("tag_one")
+    @cliout.string.should include("2")
+  end
 
   it "should append on directories a trailing slash" do
+    pending
+  end
+  
+  it "should only accept files or directories in subdirectories" do
     pending
   end
   
