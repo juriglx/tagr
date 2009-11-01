@@ -33,6 +33,12 @@ When /^I run tag\.rb "([^\"]*)" "([^\"]*)" "([^\"]*)" in the testpath$/ do |meth
   @tagger.run([method, arg1, arg2])
 end
 
+When /^I run tag\.rb "([^\"]*)" "([^\"]*)" in the testpath$/ do |method, arg2|
+  @cliout = StringIO.new
+  @tagger = Tag.new(TESTPATH, @cliout)
+  @tagger.run([method, arg2])
+end
+
 When /^I run tag\.rb "([^\"]*)" in the testpath$/ do |method|
   @cliout = StringIO.new
   @tagger = Tag.new(TESTPATH, @cliout)

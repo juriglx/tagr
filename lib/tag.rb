@@ -16,6 +16,8 @@ class Tag
       add(arguments[1], arguments[2])
     when arguments[0] == "list"
       list()
+    when arguments[0] == "show"
+      show(arguments[1])
     end
   end
   
@@ -34,6 +36,12 @@ class Tag
     tags = read_tags()
     @out.write("\n") if tags.empty?
     @out.write(tags.keys.sort.join(" ") + "\n")
+  end
+  
+  def show(tag)
+    tags = read_tags()
+    @out.write("\n") if (tags.empty? or tags[tag].nil?)
+    @out.write(tags[tag].sort.join(" ") + "\n") 
   end
   
   def exist?(tag, file)
