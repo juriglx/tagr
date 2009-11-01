@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 require 'rubygems'
 require 'json'
 
@@ -34,13 +32,13 @@ class Tagr
   
   def list()
     tags = read_tags()
-    @out.write("\n") if tags.empty?
+    return if tags.empty?
     @out.write(tags.keys.sort.join(" ") + "\n")
   end
   
   def show(tag)
     tags = read_tags()
-    @out.write("\n") if (tags.empty? or tags[tag].nil?)
+    return if (tags.empty? or tags[tag].nil?)
     @out.write(tags[tag].sort.join(" ") + "\n") 
   end
   
@@ -72,9 +70,6 @@ class Tagr
     f.close unless f.nil?
   end
 end
-
-tagr = Tagr.new(Dir.pwd, STDOUT)
-tagr.run(ARGV)
 
 
 
