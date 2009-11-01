@@ -8,16 +8,13 @@ Given /^I have a file called "([^\"]*)" in the testpath$/ do |file|
 end
 
 Given /^I have no \.tags file in the testpath$/ do
-  File.delete(File.join(TESTPATH, ".tags"))
+  cliout = StringIO.new
+  tagr = Tagr.new(TESTPATH, cliout)
+  tagr.delete_all
 end
 
 Given /^I have a \.tags file in the testpath$/ do
   @f = File.new(File.join(TESTPATH, ".tags"), 'w')
-end
-
-Given /^I have the tag "([^\"]*)" in my \.tags file$/ do |tag|
-  Given "I have a .tags file in the testpath"
-  Given "I have the tag \"" + tag + "\" in my .tags file attached to \"my.file\""
 end
 
 Given /^I have the tag "([^\"]*)" in my \.tags file attached to "([^\"]*)"$/ do |tag, file|

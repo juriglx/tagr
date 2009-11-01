@@ -2,30 +2,35 @@ require 'rubygems'
 require 'json'
 
 class Tagr
+  
+  TAGFILE_NAME = ".tags"
 
   def initialize(working_dir, out)
-    @tagfile = File.join(working_dir, ".tags")
+    @working_dir = working_dir
+    @tagfile = File.join(@working_dir, TAGFILE_NAME)
     @out = out
   end
   
   def run(arguments)
+    cmd = arguments[0]
     case
-    when arguments[0] == "add"
+    when cmd == "add"
       add(arguments[1], arguments[2])
-    when arguments[0] == "list"
+    when cmd == "list"
       list()
-    when arguments[0] == "show"
+    when cmd == "show"
       show(arguments[1])
     end
   end
   
   def add(tag, file)
+    return unless File.exist?(File.join(@working_dir, file))
     tags = read_tags()
     files = tags[tag]
     if(files.nil?)
       tags[tag] = [file]
     else
-      tags[tag].push(file)
+      tags[tag].push(file).uniq!
     end
     write_tags(tags)
   end
@@ -46,6 +51,13 @@ class Tagr
     files = read_tags()[tag]
     return false if files.nil?
     return files.include?(file)
+  end
+  
+  def delete_all()
+    begin
+      File.delete(@tagfile)      
+    rescue Errno::ENOENT
+    end
   end
   
   private
