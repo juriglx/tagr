@@ -5,5 +5,5 @@ Feature: Show Tags
     
     Scenario: Show Tags
         Given I have the tag "sweetness" in my .tags file attached to "book.pdf"
-        When I run tag.rb "show" "sweetness" in the testpath
+        When I run tag.rb "show sweetness" in the testpath
         And I should see "book.pdf"

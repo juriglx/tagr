@@ -27,22 +27,10 @@ Given /^I have the tag "([^\"]*)" in my \.tags file attached to "([^\"]*)"$/ do 
   @tagger.add(tag, file)
 end
 
-When /^I run tag\.rb "([^\"]*)" "([^\"]*)" "([^\"]*)" in the testpath$/ do |method, arg1, arg2|
+When /^I run tag\.rb "([^\"]*)" in the testpath$/ do |arg|
   @cliout = StringIO.new
   @tagger = Tag.new(TESTPATH, @cliout)
-  @tagger.run([method, arg1, arg2])
-end
-
-When /^I run tag\.rb "([^\"]*)" "([^\"]*)" in the testpath$/ do |method, arg2|
-  @cliout = StringIO.new
-  @tagger = Tag.new(TESTPATH, @cliout)
-  @tagger.run([method, arg2])
-end
-
-When /^I run tag\.rb "([^\"]*)" in the testpath$/ do |method|
-  @cliout = StringIO.new
-  @tagger = Tag.new(TESTPATH, @cliout)
-  @tagger.run([method])
+  @tagger.run(arg.split(" "))
 end
 
 Then /^I should have a \.tags file in the testpath$/ do
