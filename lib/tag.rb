@@ -32,8 +32,8 @@ class Tag
   
   def list()
     tags = read_tags()
-    @out.write("") if tags.empty?
-    @out.write(tags.keys.sort)
+    @out.write("\n") if tags.empty?
+    @out.write(tags.keys.sort.join(" ") + "\n")
   end
   
   def exist?(tag, file)
