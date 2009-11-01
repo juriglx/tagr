@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'json'
 
-class Tag
+class Tagr
 
   def initialize(working_dir, out)
     @tagfile = File.join(working_dir, ".tags")
@@ -73,8 +73,8 @@ class Tag
   end
 end
 
-tag = Tag.new(Dir.pwd, STDOUT)
-tag.run(ARGV)
+tagr = Tagr.new(Dir.pwd, STDOUT)
+tagr.run(ARGV)
 
 
 

@@ -5,5 +5,5 @@ Feature: List Tags
     
     Scenario: List Tags
         Given I have the tag "sweetness" in my .tags file
-        When I run tag.rb "list" in the testpath
+        When I run tagr.rb "list" in the testpath
         And I should see "sweetness"

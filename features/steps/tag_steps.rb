@@ -1,7 +1,7 @@
 TESTPATH = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "testpath"))
 
 require 'json'
-require File.join(File.dirname(__FILE__), "..", "..", "lib", "tag.rb")
+require File.join(File.dirname(__FILE__), "..", "..", "lib", "tagr.rb")
 
 Given /^I have a file called "([^\"]*)" in the testpath$/ do |file|
   File.new(File.join(TESTPATH, file), 'w')
@@ -23,14 +23,14 @@ end
 Given /^I have the tag "([^\"]*)" in my \.tags file attached to "([^\"]*)"$/ do |tag, file|
   Given "I have a .tags file in the testpath"
   @cliout = StringIO.new
-  @tagger = Tag.new(TESTPATH, @cliout)
-  @tagger.add(tag, file)
+  @tagr = Tagr.new(TESTPATH, @cliout)
+  @tagr.add(tag, file)
 end
 
-When /^I run tag\.rb "([^\"]*)" in the testpath$/ do |arg|
+When /^I run tagr\.rb "([^\"]*)" in the testpath$/ do |arg|
   @cliout = StringIO.new
-  @tagger = Tag.new(TESTPATH, @cliout)
-  @tagger.run(arg.split(" "))
+  @tagr = Tagr.new(TESTPATH, @cliout)
+  @tagr.run(arg.split(" "))
 end
 
 Then /^I should have a \.tags file in the testpath$/ do
@@ -52,7 +52,7 @@ Then /^I should have the tag "([^\"]*)" in my \.tags attached to "([^\"]*)"$/ do
   Then "I should have a .tags file in the testpath"
   Then "I should have the tag \"" + tag + "\" in my .tags file"
   Then "I should have the relative path of \"" + file + "\" in my .tags file"
-  @tagger.exist?(tag, file).should == true
+  @tagr.exist?(tag, file).should == true
 end
 
 Then /^I should see "([^\"]*)"$/ do |tag|
