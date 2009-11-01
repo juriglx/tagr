@@ -22,21 +22,21 @@ end
 
 Given /^I have the tag "([^\"]*)" in my \.tags file attached to "([^\"]*)"$/ do |tag, file|
   Given "I have a .tags file in the testpath"
-  tagger = Tag.new(TESTPATH)
-  tagger.add(tag, file)
+  @cliout = StringIO.new
+  @tagger = Tag.new(TESTPATH, @cliout)
+  @tagger.add(tag, file)
 end
 
-When /^I run "([^\"]*)" "([^\"]*)" "([^\"]*)" "([^\"]*)" in the testpath$/ do |cmd, method, arg1, arg2|
-  Dir.chdir(TESTPATH)
-  @run = system(File.join(TESTPATH, "..", "lib", cmd), method, arg1, arg2)
+When /^I run tag\.rb "([^\"]*)" "([^\"]*)" "([^\"]*)" in the testpath$/ do |method, arg1, arg2|
+  @cliout = StringIO.new
+  @tagger = Tag.new(TESTPATH, @cliout)
+  @tagger.run([method, arg1, arg2])
 end
 
-When /^I run "([^\"]*)" "([^\"]*)" in the testpath$/ do |cmd, method|
-  pending
-end
-
-Then /^the tag script should be run$/ do
-  @run.should == true
+When /^I run tag\.rb "([^\"]*)" in the testpath$/ do |method|
+  @cliout = StringIO.new
+  @tagger = Tag.new(TESTPATH, @cliout)
+  @tagger.run([method])
 end
 
 Then /^I should have a \.tags file in the testpath$/ do
@@ -58,10 +58,9 @@ Then /^I should have the tag "([^\"]*)" in my \.tags attached to "([^\"]*)"$/ do
   Then "I should have a .tags file in the testpath"
   Then "I should have the tag \"" + tag + "\" in my .tags file"
   Then "I should have the relative path of \"" + file + "\" in my .tags file"
-  tagger = Tag.new(TESTPATH)
-  tagger.exist?(tag, file).should == true
+  @tagger.exist?(tag, file).should == true
 end
 
-Then /^I should see "([^\"]*)"$/ do |arg1|
-  pending
+Then /^I should see "([^\"]*)"$/ do |tag|
+  @cliout.string.should include(tag)
 end

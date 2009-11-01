@@ -5,14 +5,17 @@ require 'json'
 
 class Tag
 
-  def initialize(working_dir)
+  def initialize(working_dir, out)
     @tagfile = File.join(working_dir, ".tags")
+    @out = out
   end
   
   def run(arguments)
     case
     when arguments[0] == "add"
       add(arguments[1], arguments[2])
+    when arguments[0] == "list"
+      list()
     end
   end
   
@@ -25,6 +28,12 @@ class Tag
       tags[tag].push(file)
     end
     write_tags(tags)
+  end
+  
+  def list()
+    tags = read_tags()
+    @out.write("") if tags.empty?
+    @out.write(tags.keys.sort)
   end
   
   def exist?(tag, file)
@@ -56,7 +65,7 @@ class Tag
   end
 end
 
-tag = Tag.new(Dir.pwd)
+tag = Tag.new(Dir.pwd, STDOUT)
 tag.run(ARGV)
 
 
